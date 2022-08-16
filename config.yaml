@@ -3,6 +3,9 @@ logging:
   level: info
   format: '%(asctime)s | %(levelname)s | %(message)s'
 
+prometheus:
+  port: 8000
+
 ping:
   interval: 10
   hosts:

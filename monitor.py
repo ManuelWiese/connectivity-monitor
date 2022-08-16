@@ -4,12 +4,15 @@ import sched
 import time
 
 from ping3 import ping
+from prometheus_client import start_http_server, Counter, Gauge, Summary
 import yaml
 
 
 def main():
     config = load_config()
     configure_logger(config['logging'])
+
+    start_http_server(config['prometheus']['port'])
 
     scheduler = sched.scheduler(time.time, time.sleep)
 
@@ -43,6 +46,16 @@ class PingSchedule:
         self.scheduler = scheduler
         self.priority = priority
 
+        self.not_reachable_counter = Counter(
+            f"connectivity_monitor_{self.server.replace('.', '_')}_not_reachable_total",
+            f"Total of times the host {self.server} was not reachable"
+        )
+
+        self.ping_gauge = Gauge(
+            f"connectivity_monitor_{self.server.replace('.', '_')}_ping_seconds",
+            "Ping time of host {self.server} in seconds"
+        )
+
         start_delay = random.random() * self.interval
         logging.info(f"Scheduling ping {self.server} in {start_delay}s")
         self.schedule(start_delay)
@@ -59,6 +72,11 @@ class PingSchedule:
         self.schedule(self.interval)
         logging.info(f"Pinging {self.server}")
         result = ping(self.server)
+
+        if result is None:
+            self.not_reachable_counter.inc()
+
+        self.ping_gauge.set(result)
         logging.info(f"Ping of {self.server}: {result}")
 
 
