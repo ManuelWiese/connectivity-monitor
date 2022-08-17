@@ -3,13 +3,12 @@ logging:
   level: info
   format: '%(asctime)s | %(levelname)s | %(message)s'
 
-prometheus:
-  port: 8000
-
 ping:
-  interval: 10
+  random_delay: 10
+  interval: 30
   hosts:
     - www.google.de
     - www.kaitos.ai
     - 8.8.8.8
     - 192.168.1.1
+

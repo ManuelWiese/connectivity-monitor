@@ -1,3 +1,4 @@
+import argparse
 import logging
 import random
 import threading
@@ -11,10 +12,14 @@ from schedule_background import schedule_background
 
 
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--prometheus_port", type=int, default=8000)
+    arguments = parser.parse_args()
+
     config = load_config()
     configure_logger(config['logging'])
 
-    start_http_server(config['prometheus']['port'])
+    start_http_server(arguments.prometheus_port)
 
     kill_event = threading.Event()
 

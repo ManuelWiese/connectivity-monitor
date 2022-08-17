@@ -12,5 +12,4 @@ COPY config.yaml /etc/connectivity_monitor/
 
 EXPOSE 8000
 
-ENTRYPOINT ["python3"]
-CMD ["monitor.py"]
+ENTRYPOINT ["python3", "monitor.py"]
