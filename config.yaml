@@ -9,3 +9,8 @@ ping:
   hosts:
     - www.google.de
 
+speedtest:
+  random_delay: 30
+  interval: 120
+  hosts:
+    - d-speed.bi-host.net:8080

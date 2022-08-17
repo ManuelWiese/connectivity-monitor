@@ -9,6 +9,7 @@ import yaml
 
 from ping import Ping
 from schedule_background import schedule_background
+from speedtest import Speedtest
 
 
 def main():
@@ -31,6 +32,17 @@ def main():
             Ping(host),
             delay=delay,
             interval=config['ping']['interval'],
+            kill_event=kill_event
+        )
+        threads.append(thread)
+
+    for host in config['speedtest']['hosts']:
+        delay = random.random() * config['speedtest']['random_delay'] if config['speedtest']['random_delay'] else 0
+
+        thread = schedule_background(
+            Speedtest(host),
+            delay=delay,
+            interval=config['speedtest']['interval'],
             kill_event=kill_event
         )
         threads.append(thread)
