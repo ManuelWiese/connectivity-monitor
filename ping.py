@@ -26,52 +26,52 @@ class Ping:
         host = self.host.replace('.', '_')
 
         self.not_reachable_counter = Counter(
-            f"connectivity_monitor_{host}_not_reachable_total",
+            f"connectivity_monitor_ping_{host}_not_reachable_total",
             f"Total of times the host {self.host} was not reachable"
         )
 
         self.parse_failed_counter = Counter(
-            f"connectivity_monitor_{host}_parse_failed_total",
+            f"connectivity_monitor_ping_{host}_parse_failed_total",
             f"Total of times of parse errors when pinging host {self.host}"
         )
 
         self.transmitted_gauge = Gauge(
-            f"connectivity_monitor_{host}_packets_transmitted",
+            f"connectivity_monitor_ping_{host}_packets_transmitted",
             "Packets transmitted to host {self.host}"
         )
 
         self.received_gauge = Gauge(
-            f"connectivity_monitor_{host}_packets_received",
+            f"connectivity_monitor_ping_{host}_packets_received",
             "Packets received from host {self.host}"
         )
 
         self.loss_gauge = Gauge(
-            f"connectivity_monitor_{host}_packet_loss_ratio",
+            f"connectivity_monitor_ping_{host}_packet_loss_ratio",
             "Packet loss ratio of host {self.host}"
         )
 
         self.time_gauge = Gauge(
-            f"connectivity_monitor_{host}_time_seconds",
+            f"connectivity_monitor_ping_{host}_time_seconds",
             "Runtime of ping command of host {self.host}"
         )
 
         self.rtt_min_gauge = Gauge(
-            f"connectivity_monitor_{host}_rtt_min_seconds",
+            f"connectivity_monitor_ping_{host}_rtt_min_seconds",
             "Min roundtrip-time of host {self.host} in seconds"
         )
 
         self.rtt_avg_gauge = Gauge(
-            f"connectivity_monitor_{host}_rtt_avg_seconds",
+            f"connectivity_monitor_ping_{host}_rtt_avg_seconds",
             "Average roundtrip-time of host {self.host} in seconds"
         )
 
         self.rtt_max_gauge = Gauge(
-            f"connectivity_monitor_{host}_rtt_max_seconds",
+            f"connectivity_monitor_ping_{host}_rtt_max_seconds",
             "Max roundtrip-time of host {self.host} in seconds"
         )
 
         self.rtt_mdev_gauge = Gauge(
-            f"connectivity_monitor_{host}_rtt_mdev_seconds",
+            f"connectivity_monitor_ping_{host}_rtt_mdev_seconds",
             "Standard deviation of roundtrip-time of host {self.host} in seconds"
         )
 
@@ -134,4 +134,3 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         kill_event.set()
         thread.join()
-
