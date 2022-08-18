@@ -18,32 +18,32 @@ class Speedtest:
         host = host.replace('-', '_')
 
         self.speedtest_failed_counter = Counter(
-            f"connectivity_monitor_{host}_speedtest_failed_total",
+            f"connectivity_monitor_speedtest_{host}_failed_total",
             f"Total of times the speedtest failed for host {self.host}"
         )
 
         self.json_failed_counter = Counter(
-            f"connectivity_monitor_{host}_json_failed_total",
+            f"connectivity_monitor_speedtest_{host}_json_failed_total",
             f"Total of times of json parse errors when speedtesting host {self.host}"
         )
 
         self.ping_gauge = Gauge(
-            f"connectivity_monitor_{host}_ping_seconds",
+            f"connectivity_monitor_speedtest_{host}_ping_seconds",
             "Ping of host {self.host}"
         )
 
         self.jitter_gauge = Gauge(
-            f"connectivity_monitor_{host}_jitter_seconds",
+            f"connectivity_monitor_speedtest_{host}_jitter_seconds",
             "Ping-Jitter of host {self.host}"
         )
 
         self.download_gauge = Gauge(
-            f"connectivity_monitor_{host}_download_bits_per_second",
+            f"connectivity_monitor_speedtest_{host}_download_bits_per_second",
             "Download speed of host {self.host}"
         )
 
         self.upload_gauge = Gauge(
-            f"connectivity_monitor_{host}_uploadload_bits_per_second",
+            f"connectivity_monitor_speedtest_{host}_upload_bits_per_second",
             "Upload speed of host {self.host}"
         )
 
@@ -97,4 +97,3 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         kill_event.set()
         thread.join()
-
