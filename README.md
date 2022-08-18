@@ -2,7 +2,7 @@
 
 A docker container to monitor network ping times internet speed.
 Subprocesses are scheduled in background threads, results are published
-to a prometheus endpoint.
+to a prometheus endpoint. This project uses [SpeedTest++](https://github.com/taganaka/SpeedTest) for testing download and upload speeds, since it was more reliable than speedtest-cli during my tests.
 
 ## How to use connectivity-monitor
 
@@ -32,9 +32,11 @@ ping:
   # list of hosts to ping
   hosts:
     - www.google.de
+    - 8.8.8.8
 
 speedtest:
   random_delay: 30
+  # i do not recommend using a speedtest this often, since it uses alot of bandwidth
   interval: 120
   hosts:
     - d-speed.bi-host.net:8080
