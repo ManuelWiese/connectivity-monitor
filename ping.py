@@ -118,8 +118,11 @@ class Ping:
 
 
 if __name__ == "__main__":
+    import logging
     import threading
     from schedule_background import schedule_background
+
+    logging.basicConfig(level="DEBUG")
 
     kill_event = threading.Event()
 

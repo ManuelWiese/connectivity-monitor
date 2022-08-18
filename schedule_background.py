@@ -47,22 +47,19 @@ def schedule_background(
             time.sleep(delay)
             target(*args, **kwargs)
 
-        thread = threading.Thread(target=new_target)
-        thread.start()
-        return thread
+    else:
+        if kill_event is None:
+            kill_event = threading.Event()
 
-    if kill_event is None:
-        kill_event = threading.Event()
-
-    def new_target():
-        time.sleep(delay)
-        next_run_time = time.time()
-        while not kill_event.is_set():
-            if time.time() < next_run_time:
-                time.sleep(0.1)
-                continue
-            next_run_time = time.time() + interval
-            target(*args, **kwargs)
+        def new_target():
+            time.sleep(delay)
+            next_run_time = time.time()
+            while not kill_event.is_set():
+                if time.time() < next_run_time:
+                    time.sleep(0.1)
+                    continue
+                next_run_time = time.time() + interval
+                target(*args, **kwargs)
 
     thread = threading.Thread(target=new_target)
     thread.start()
