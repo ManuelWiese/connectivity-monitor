@@ -48,13 +48,10 @@ def schedule_background(
             target(*args, **kwargs)
 
     else:
-        if kill_event is None:
-            kill_event = threading.Event()
-
         def new_target():
             time.sleep(delay)
             next_run_time = time.time()
-            while not kill_event.is_set():
+            while kill_event is None or not kill_event.is_set():
                 if time.time() < next_run_time:
                     time.sleep(0.1)
                     continue
