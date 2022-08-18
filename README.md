@@ -10,12 +10,12 @@ The container can be pulled from dockerhub and started using:
 ```console
 docker run --rm -p 8000:8000 -v /path/to/config.yaml:/etc/connectivity_monitor/config.yaml manuelwiese/connectivity_monitor
 ```
-In this example the resulting container will report metrics on port 8000.
+In this example the container will report metrics on port 8000.
 
 ## Example configuration
 
 To configure new targets for ping and speedtest, you can modify the provided config.yaml file.
-To find new speedtest servers, use the speedtest-cli python package or SpeedTest++.
+To find new speedtest servers, use the speedtest-cli python package or [SpeedTest++](https://github.com/taganaka/SpeedTest).
 
 ```yaml
 logging:
