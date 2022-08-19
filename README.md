@@ -41,3 +41,13 @@ speedtest:
   hosts:
     - d-speed.bi-host.net:8080
 ```
+
+# Building the container
+
+To build the container on your host use
+
+```console
+docker build -t connectivity-monitor .
+```
+
+TODO: multiarch builds
