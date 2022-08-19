@@ -50,4 +50,22 @@ To build the container on your host use
 docker build -t connectivity-monitor .
 ```
 
-TODO: multiarch builds
+To build the container for multiple architectures(e.g. and64 and arm64) use *docker buildx*.
+The following example uses QEMU emulation support, using native nodes might be easier.
+
+```console
+# create a new builder instance using the BuildKit docker-container
+docker buildx create --name multiarch --driver docker-container --use
+
+# inspect the current builder, boot builder if needed
+docker buildx inspect --bootstrap
+
+# this is needed when not using docker desktop for some architectures
+# some architectures work without (e.g. arm64/v8 works for me on amd64)
+docker run --privileged --rm tonistiigi/binfmt --install all
+
+# use buildx to build multiarch container
+# if you do not want to push directly to a registry
+# you must solve the issue to export the containers from the build-containers
+docker buildx build --push --platform linux/arm/v7,linux/arm64/v8,linux/amd64 --tag manuelwiese/connectivity-monitor:latest .
+```
