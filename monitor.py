@@ -39,10 +39,12 @@ def main():
     for host in config['speedtest']['hosts']:
         delay = random.random() * config['speedtest']['random_delay'] if config['speedtest']['random_delay'] else 0
 
+        interval = config['speedtest']['interval']
+
         thread = schedule_background(
-            Speedtest(host),
+            Speedtest(host, timeout=interval-1),
             delay=delay,
-            interval=config['speedtest']['interval'],
+            interval=interval,
             kill_event=kill_event
         )
         threads.append(thread)

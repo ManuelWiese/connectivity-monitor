@@ -8,8 +8,9 @@ from prometheus_client import Counter, Gauge
 
 
 class Speedtest:
-    def __init__(self, host):
+    def __init__(self, host, timeout=120):
         self.host = host
+        self.timeout = timeout
         self.create_prometheus_metrics()
 
     def create_prometheus_metrics(self):
@@ -52,7 +53,7 @@ class Speedtest:
         
     def __call__(self):
         popen = subprocess.Popen(
-            ["SpeedTest", "--test-server", self.host, "--output", "json"],
+            ["timeout", str(self.timeout), "SpeedTest", "--test-server", self.host, "--output", "json"],
             shell=False,
             stdout=subprocess.PIPE
         )
