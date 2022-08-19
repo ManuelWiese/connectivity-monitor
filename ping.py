@@ -92,6 +92,16 @@ class Ping:
 
         if exit_code:
             self.not_reachable_counter.inc()
+            self.transmitted_gauge.set(0.)
+            self.received_gauge.set(0.)
+            self.loss_gauge.set(1.)
+            self.time_gauge.set(float("nan"))
+
+            self.rtt_min_gauge.set(float("nan"))
+            self.rtt_avg_gauge.set(float("nan"))
+            self.rtt_max_gauge.set(float("nan"))
+            self.rtt_mdev_gauge.set(float("nan"))
+
             return
 
         try:
@@ -99,7 +109,7 @@ class Ping:
 
             packet_statistics = self.parse_packet_statistics.search(output)
             logging.debug(f"packet_statistics of {self.host}: {packet_statistics.named}")
-            
+
             self.transmitted_gauge.set(packet_statistics['transmitted'])
             self.received_gauge.set(packet_statistics['received'])
             self.loss_gauge.set(packet_statistics['loss'] / 100.)

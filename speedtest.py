@@ -64,6 +64,12 @@ class Speedtest:
 
         if exit_code:
             self.speedtest_failed_counter.inc()
+
+            self.ping_gauge.set(float("nan"))
+            self.jitter_gauge.set(float("nan"))
+            self.download_gauge.set(0.)
+            self.upload_gauge.set(0.)
+
             return
 
         try:
