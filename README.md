@@ -7,7 +7,7 @@ to a prometheus endpoint. This project uses [SpeedTest++](https://github.com/tag
 ## How to use connectivity-monitor
 
 The container can be pulled from dockerhub and started using:
-```console
+```shell
 docker run --rm -p 8000:8000 -v /path/to/config.yaml:/etc/connectivity_monitor/config.yaml manuelwiese/connectivity_monitor
 ```
 In this example the container will report metrics on port 8000.
@@ -46,14 +46,14 @@ speedtest:
 
 To build the container on your host use
 
-```console
+```shell
 docker build -t connectivity-monitor .
 ```
 
 To build the container for multiple architectures(e.g. and64 and arm64) use *docker buildx*.
 The following example uses QEMU emulation support, using native nodes might be easier.
 
-```console
+```shell
 # create a new builder instance using the BuildKit docker-container
 docker buildx create --name multiarch --driver docker-container --use
 
