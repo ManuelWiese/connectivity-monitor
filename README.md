@@ -1,8 +1,8 @@
 # connectivity-monitor
 
-A docker container to monitor network ping times internet speed.
+A docker container to monitor network ping times and internet speed.
 Subprocesses are scheduled in background threads, results are published
-to a prometheus endpoint. This project uses [SpeedTest++](https://github.com/taganaka/SpeedTest) for testing download and upload speeds, since it was more reliable than speedtest-cli during my tests.
+to a prometheus endpoint. This project uses [SpeedTest++](https://github.com/taganaka/SpeedTest) for testing download and upload speeds, since it was more reliable than speedtest-cli during tests.
 
 ## How to use connectivity-monitor
 
@@ -36,7 +36,7 @@ ping:
 
 speedtest:
   random_delay: 30
-  # i do not recommend using a speedtest this often, since it uses alot of bandwidth
+  # I do not recommend using a speedtest this often, since it uses a lot of bandwidth
   interval: 120
   hosts:
     - d-speed.bi-host.net:8080
@@ -51,7 +51,7 @@ docker build -t connectivity-monitor .
 ```
 
 To build the container for multiple architectures(e.g. and64 and arm64) use *docker buildx*.
-The following example uses QEMU emulation support, using native nodes might be easier.
+The following example uses QEMU emulation support. Using native nodes might be easier.
 
 ```shell
 # create a new builder instance using the BuildKit docker-container
