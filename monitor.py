@@ -7,7 +7,7 @@ import time
 from prometheus_client import start_http_server
 import yaml
 
-from ping import Ping
+from ping import Ping, PingMetrics
 from schedule_background import schedule_background
 from speedtest import Speedtest
 
@@ -26,10 +26,14 @@ def main():
 
     threads = []
 
+    ping_metrics = None
     for host in config['ping']['hosts']:
+        if ping_metrics is None:
+            ping_metrics = PingMetrics()
+
         delay = random.random() * config['ping']['random_delay'] if config['ping']['random_delay'] else 0
         thread = schedule_background(
-            Ping(host),
+            Ping(host, ping_metrics),
             delay=delay,
             interval=config['ping']['interval'],
             kill_event=kill_event
