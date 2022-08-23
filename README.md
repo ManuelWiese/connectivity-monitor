@@ -50,7 +50,7 @@ To build the container on your host use
 docker build -t connectivity-monitor .
 ```
 
-To build the container for multiple architectures(e.g. and64 and arm64) use *docker buildx*.
+To build the container for multiple architectures(e.g. amd64 and arm64) use *docker buildx*.
 The following example uses QEMU emulation support. Using native nodes might be easier.
 
 ```shell
