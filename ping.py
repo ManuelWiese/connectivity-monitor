@@ -26,7 +26,7 @@ class Ping:
 
     def __str__(self):
         return f"Ping({self.host}, count={self.count})"
-        
+
     def __call__(self):
         popen = subprocess.Popen(
             ["ping", "-c", str(self.count), self.host],
@@ -73,7 +73,7 @@ class Ping:
             self.metrics.rtt_gauge.labels(self._host, "mdev").set(time_statistics['rtt_mdev'] / 1000.)
         except Exception as e:
             logging.exception(e)
-            self.parse_failed_counter.inc()
+            self.metrics.parse_failed_counter.labels(self._host).inc()
 
 
 class PingMetrics:
