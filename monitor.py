@@ -9,7 +9,7 @@ import yaml
 
 from ping import Ping, PingMetrics
 from schedule_background import schedule_background
-from speedtest import Speedtest
+from speedtest import Speedtest, SpeedtestMetrics
 
 
 def main():
@@ -40,13 +40,17 @@ def main():
         )
         threads.append(thread)
 
+    speedtest_metrics = None
     for host in config['speedtest']['hosts']:
+        if speedtest_metrics is None:
+            speedtest_metrics = SpeedtestMetrics()
+
         delay = random.random() * config['speedtest']['random_delay'] if config['speedtest']['random_delay'] else 0
 
         interval = config['speedtest']['interval']
 
         thread = schedule_background(
-            Speedtest(host, timeout=interval-1),
+            Speedtest(host, speedtest_metrics, timeout=interval-1),
             delay=delay,
             interval=interval,
             kill_event=kill_event

@@ -8,45 +8,16 @@ from prometheus_client import Counter, Gauge
 
 
 class Speedtest:
-    def __init__(self, host, timeout=120):
+    def __init__(self, host, metrics, timeout=120):
         self.host = host
+        self.metrics = metrics
         self.timeout = timeout
-        self.create_prometheus_metrics()
 
-    def create_prometheus_metrics(self):
-        host = self.host.replace('.', '_')
-        host = host.replace(':', '_')
-        host = host.replace('-', '_')
+        self._host = self.host.replace('.', '_')
+        self._host = self._host.replace(':', '_')
+        self._host = self._host.replace('-', '_')
 
-        self.speedtest_failed_counter = Counter(
-            f"connectivity_monitor_speedtest_{host}_failed_total",
-            f"Total of times the speedtest failed for host {self.host}"
-        )
-
-        self.json_failed_counter = Counter(
-            f"connectivity_monitor_speedtest_{host}_json_failed_total",
-            f"Total of times of json parse errors when speedtesting host {self.host}"
-        )
-
-        self.ping_gauge = Gauge(
-            f"connectivity_monitor_speedtest_{host}_ping_seconds",
-            "Ping of host {self.host}"
-        )
-
-        self.jitter_gauge = Gauge(
-            f"connectivity_monitor_speedtest_{host}_jitter_seconds",
-            "Ping-Jitter of host {self.host}"
-        )
-
-        self.download_gauge = Gauge(
-            f"connectivity_monitor_speedtest_{host}_download_bits_per_second",
-            "Download speed of host {self.host}"
-        )
-
-        self.upload_gauge = Gauge(
-            f"connectivity_monitor_speedtest_{host}_upload_bits_per_second",
-            "Upload speed of host {self.host}"
-        )
+        self.metrics.add_host(self._host)
 
     def __str__(self):
         return f"Speedtest({self.host})"
@@ -64,12 +35,12 @@ class Speedtest:
         exit_code = popen.poll()
 
         if exit_code:
-            self.speedtest_failed_counter.inc()
+            self.metrics.speedtest_failed_counter.labels(self._host).inc()
 
-            self.ping_gauge.set(float("nan"))
-            self.jitter_gauge.set(float("nan"))
-            self.download_gauge.set(0.)
-            self.upload_gauge.set(0.)
+            self.metrics.ping_gauge.labels(self._host).set(float("nan"))
+            self.metrics.jitter_gauge.labels(self._host).set(float("nan"))
+            self.metrics.download_gauge.labels(self._host).set(0.)
+            self.metrics.upload_gauge.labels(self._host).set(0.)
 
             return
 
@@ -77,14 +48,61 @@ class Speedtest:
             output = popen.stdout.read().decode()
             data = json.loads(output)
             logging.debug(f"SpeedTest data: {data}")
-            self.ping_gauge.set(int(data['ping']) / 1000.)
-            self.jitter_gauge.set(int(data['jitter']) / 1000.)
-            self.download_gauge.set(float(data['download']))
-            self.upload_gauge.set(float(data['upload']))
+            self.metrics.ping_gauge.labels(self._host).set(int(data['ping']) / 1000.)
+            self.metrics.jitter_gauge.labels(self._host).set(int(data['jitter']) / 1000.)
+            self.metrics.download_gauge.labels(self._host).set(float(data['download']))
+            self.metrics.upload_gauge.labels(self._host).set(float(data['upload']))
 
         except Exception as e:
             logging.exception(e)
-            self.json_failed_counter.inc()
+            self.metrics.json_failed_counter.labels(self._host).inc()
+
+
+class SpeedtestMetrics:
+    def __init__(self):
+        self.speedtest_failed_counter = Counter(
+            f"connectivity_monitor_speedtest_failed_total",
+            f"Total of times the speedtest failed for host",
+            ["host"]
+        )
+
+        self.json_failed_counter = Counter(
+            f"connectivity_monitor_speedtest_json_failed_total",
+            f"Total of times of json parse errors when speedtesting host",
+            ["host"]
+        )
+
+        self.ping_gauge = Gauge(
+            f"connectivity_monitor_speedtest_ping_seconds",
+            "Ping of host",
+            ["host"]
+        )
+
+        self.jitter_gauge = Gauge(
+            f"connectivity_monitor_speedtest_jitter_seconds",
+            "Ping-Jitter of host",
+            ["host"]
+        )
+
+        self.download_gauge = Gauge(
+            f"connectivity_monitor_speedtest_download_bits_per_second",
+            "Download speed of host",
+            ["host"]
+        )
+
+        self.upload_gauge = Gauge(
+            f"connectivity_monitor_speedtest_upload_bits_per_second",
+            "Upload speed of host",
+            ["host"]
+        )
+
+    def add_host(self, host):
+        self.speedtest_failed_counter.labels(host)
+        self.json_failed_counter.labels(host)
+        self.ping_gauge.labels(host)
+        self.jitter_gauge.labels(host)
+        self.download_gauge.labels(host)
+        self.upload_gauge.labels(host)
 
 
 if __name__ == "__main__":
